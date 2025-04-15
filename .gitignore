@@ -1,0 +1,21 @@
+# env
+.env
+
+# dependencies
+/vendor/
+composer.lock
+/node_modules/
+package-lock.json
+
+# Test Results
+.phpunit.result.cache
+/artifacts/
+/test-results/
+/playwright-report/
+
+# WordPress
+.wp-env.override.json
+
+# OS
+.DS_Store
+Thumbs.db

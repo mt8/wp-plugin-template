@@ -1,0 +1,20 @@
+{
+    "name": "mt8/wp-plugin-template",
+    "description": "A WordPress plugin template",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "yoast/phpunit-polyfills": "^1.0",
+        "wp-coding-standards/wpcs": "^3.0"
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=WordPress"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

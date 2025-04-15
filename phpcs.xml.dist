@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards for Plugins">
+    <description>Generally-applicable sniffs for WordPress plugins</description>
+
+    <rule ref="WordPress">
+
+        <!-- The file needs to be in PSR-4 format to be autoloaded. -->
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+        <exclude name="WordPress.WP.I18n.NoHtmlWrappedStrings"/>
+
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.Found"/>
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"/>
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        <exclude name="Squiz.Commenting.FunctionCommentThrowTag.Missing"/>
+
+    </rule>
+
+    <!-- Check all PHP files in directory tree by default. -->
+    <arg name="extensions" value="php"/>
+    <file>.</file>
+
+    <arg name="colors" />
+
+    <!-- Show progress and sniff codes in all reports -->
+    <arg value="ps"/>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+     <exclude-pattern>*/node_modules/*</exclude-pattern>   
+    <exclude-pattern>tests/*</exclude-pattern>
+
+    <config name="minimum_supported_wp_version" value="6.6"/>
+
+
+</ruleset>
