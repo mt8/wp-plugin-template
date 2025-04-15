@@ -1,79 +1,109 @@
-# WordPress Plugin Template
+# WordPress Plugin Template - Linting and Testing Guide
 
-このリポジトリは、WordPressプラグイン開発を効率化するためのテンプレートです。開発者がすぐに利用できるように、必要なツールや設定があらかじめ構成されています。
+This document outlines the linting and testing mechanisms set up in this WordPress plugin template project.
 
-## 特徴
+## Linting
 
-- **PHPUnit** を使用したPHPユニットテストのサポート
-- **Playwright** を使用したE2Eテストのサポート
-- WordPress公式の開発ツール（`@wordpress/scripts`）を活用
-- wp-envで簡単にセットアップ可能なローカル開発環境
+### PHP Linting
 
-## セットアップ
+The project uses PHP_CodeSniffer (PHPCS) for PHP code linting with WordPress Coding Standards.
 
-1. 必要な依存関係をインストールします。
+#### Configuration
 
-   ```bash
-   npm install
-   ```
+- **Configuration File**: `phpcs.xml.dist`
+- **Standard**: WordPress Coding Standards
+- **Excluded Rules**:
+  - `WordPress.Files.FileName.NotHyphenatedLowercase` - Allows non-hyphenated filenames
+  - `WordPress.Files.FileName.InvalidClassFileName` - Allows class filenames that don't match class names
+  - `WordPress.WP.I18n.MissingTranslatorsComment` - Allows missing translator comments
+  - `WordPress.WP.I18n.NoHtmlWrappedStrings` - Allows non-HTML wrapped strings
+  - `Generic.CodeAnalysis.UnusedFunctionParameter.Found` - Allows unused function parameters
+  - `Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed` - Allows unused function parameters after last used
+  - `Generic.Commenting.DocComment.MissingShort` - Allows missing short descriptions in doc comments
+  - `Squiz.Commenting.FunctionComment.ParamCommentFullStop` - Allows param comments without full stops
+  - `Squiz.Commenting.InlineComment.InvalidEndChar` - Allows inline comments with invalid end characters
+  - `Squiz.Commenting.FunctionCommentThrowTag.Missing` - Allows missing throw tags in function comments
 
-2. WordPressローカル環境を起動します。
+#### Excluded Directories
 
-   ```bash
-   wp-env start
-   ```
+- `vendor/`
+- `node_modules/`
+- `tests/`
 
-3. ローカル環境のコンテナ内で依存関係をインストールします。
+#### Commands
 
-    ```bash
-    npm run composer install
-    ```
+- **Lint PHP**: `npm run lint:php` - Runs PHPCS to check code against standards
+- **Format PHP**: `npm run format:php` - Runs PHPCBF to automatically fix code style issues
 
-## スクリプト
 
-以下のスクリプトを使用して、開発やテストを実行できます。
+## Testing
 
-### テスト
+### PHP Unit Testing
 
-- **`npm run test:phpunit`**  
-  PHPUnitを使用してPHPのユニットテストを実行します。
+The project uses PHPUnit for PHP unit testing.
 
-- **`npm run test:e2e`**  
-  Playwrightを使用してE2Eテストを実行します。
+#### Configuration
 
-- **`npm run test:e2e:debug`**  
-  デバッグモードでE2Eテストを実行します。
+- **Configuration File**: `phpunit.xml.dist`
+- **Bootstrap File**: `tests/php/bootstrap.php`
+- **Test Directory**: `tests/php/`
+- **Test Files Pattern**: Files with prefix `test-` and suffix `.php`
 
-- **`npm run test`**  
-  PHPUnitとE2Eテストをすべて実行します。
+#### Dependencies
 
-### コード品質チェック
+- **PHPUnit Polyfills**: Uses Yoast PHPUnit Polyfills for compatibility across different PHPUnit versions
 
-- **`npm run lint:php`**  
-  PHP CodeSniffer（`phpcs`）を使用してPHPコードの静的解析を行い、コーディング規約に違反している箇所を検出します。
+#### Test Structure
 
-- **`npm run format:php`**  
-  PHP Code Beautifier and Fixer（`phpcbf`）を使用して、コーディング規約に違反している箇所を自動修正します。
+- Tests extend `WP_UnitTestCase` class
+- Test methods are prefixed with `test_`
 
-## ディレクトリ構成
+#### Commands
 
-```
-wp-plugin-template/
-├── wp-content/
-│   └── plugins/
-│       └── wp-plugin-template/  # プラグインのソースコード
-├── tests/                       # テスト関連ファイル
-├── package.json                 # npmスクリプトと依存関係
-├── wp-env.json                  # wp-env設定ファイル
-└── README.md                    # このファイル
-```
+- **Run PHP Tests**: `npm run test:phpunit` - Runs PHPUnit tests with testdox and verbose output
 
-## 必要条件
+### End-to-End (E2E) Testing
 
-- Node.js 16以上
-- Docker（`wp-env` の実行に必要）
-- Composer（PHP依存関係の管理に必要）
+The project uses Playwright for end-to-end testing.
 
-## ライセンス
+#### Configuration
 
-このプロジェクトは [GPL-2.0-or-later](https://www.gnu.org/licenses/gpl-2.0.html) ライセンスの下で提供されています。
+- **Configuration File**: `playwright.config.js`
+- **Base Configuration**: Extends `@wordpress/scripts/config/playwright.config.js`
+- **Test Directory**: `tests/e2e/`
+
+#### Dependencies
+
+- **WordPress E2E Test Utils**: Uses `@wordpress/e2e-test-utils-playwright` for WordPress-specific testing utilities
+
+#### Test Structure
+
+- Tests use the `test` and `expect` functions from `@wordpress/e2e-test-utils-playwright`
+- Tests typically include:
+  - `beforeAll` hook to activate the plugin
+  - `afterAll` hook to deactivate the plugin
+  - Test cases with assertions
+
+#### Commands
+
+- **Run E2E Tests**: `npm run test:e2e` - Runs Playwright tests
+- **Debug E2E Tests**: `npm run test:e2e:debug` - Runs Playwright tests in debug mode
+
+### Combined Testing
+
+- **Run All Tests**: `npm run test` - Runs both PHPUnit and E2E tests
+
+## WordPress Environment
+
+The project uses `@wordpress/env` for setting up a local WordPress environment.
+
+#### Configuration
+
+- **Configuration File**: `.wp-env.json`
+- **WordPress Core**: Uses default WordPress core
+- **Plugins**: Includes the current directory as a plugin
+
+#### Commands
+
+- **Composer in WordPress Environment**: `npm run composer` - Runs Composer in the WordPress environment
+- **Composer in Test Environment**: `npm run composer:test` - Runs Composer in the test environment
