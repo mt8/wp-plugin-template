@@ -1,0 +1,12 @@
+{
+    "servers": {
+        "backlog" : {
+            "command": "npx",
+            "args": [
+                "-y",
+                "fleagne/backlog-mcp-server"
+            ],
+            "envFile" : "${workspaceFolder}/.env"
+        }
+    }
+}
