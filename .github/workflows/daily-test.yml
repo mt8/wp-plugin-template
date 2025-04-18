@@ -1,0 +1,60 @@
+name: Daily WordPress Plugin Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日UTC 0:00（日本時間9:00）に実行
+  workflow_dispatch:  # 手動実行も可能にする
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+        wp-version: ['latest', '6.7', '6.6']
+      fail-fast: false  # 一部の組み合わせが失敗しても他の組み合わせのテストを続行
+
+    name: PHP ${{ matrix.php-version }} / WP ${{ matrix.wp-version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, mysqli, zip
+          tools: composer
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          composer install --no-progress --prefer-dist --optimize-autoloader
+          npm ci
+
+      - name: Create WP-ENV override for WordPress and PHP version
+        run: |
+          echo '{
+            "core": "WordPress/WordPress#${{ matrix.wp-version }}",
+            "phpVersion": "${{ matrix.php-version }}"
+          }' > .wp-env.override.json
+          cat .wp-env.override.json
+
+      - name: Start WordPress environment
+        run: npx wp-env start
+
+      - name: Install WordPress test dependencies in container
+        run: npm run composer:test install
+
+      - name: Run PHP Unit Tests
+        run: npm run test:phpunit
+
+      - name: Run E2E Tests
+        run: npm run test:e2e
