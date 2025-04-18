@@ -1,109 +1,176 @@
-# WordPress Plugin Template - Linting and Testing Guide
+# WordPress プラグイン開発テンプレート
 
-This document outlines the linting and testing mechanisms set up in this WordPress plugin template project.
+このリポジトリは、WordPress プラグイン開発のためのスケルトンプロジェクトです。AI 支援による開発がスムーズに行えるように設計されています。
 
-## Linting
+## プロジェクト構造
 
-### PHP Linting
+### リンティング
 
-The project uses PHP_CodeSniffer (PHPCS) for PHP code linting with WordPress Coding Standards.
+#### PHPリンティング
 
-#### Configuration
+このプロジェクトでは、WordPress Coding Standardsに準拠したPHP_CodeSniffer（PHPCS）を使用してPHPコードのリンティングを行っています。
 
-- **Configuration File**: `phpcs.xml.dist`
-- **Standard**: WordPress Coding Standards
-- **Excluded Rules**:
-  - `WordPress.Files.FileName.NotHyphenatedLowercase` - Allows non-hyphenated filenames
-  - `WordPress.Files.FileName.InvalidClassFileName` - Allows class filenames that don't match class names
-  - `WordPress.WP.I18n.MissingTranslatorsComment` - Allows missing translator comments
-  - `WordPress.WP.I18n.NoHtmlWrappedStrings` - Allows non-HTML wrapped strings
-  - `Generic.CodeAnalysis.UnusedFunctionParameter.Found` - Allows unused function parameters
-  - `Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed` - Allows unused function parameters after last used
-  - `Generic.Commenting.DocComment.MissingShort` - Allows missing short descriptions in doc comments
-  - `Squiz.Commenting.FunctionComment.ParamCommentFullStop` - Allows param comments without full stops
-  - `Squiz.Commenting.InlineComment.InvalidEndChar` - Allows inline comments with invalid end characters
-  - `Squiz.Commenting.FunctionCommentThrowTag.Missing` - Allows missing throw tags in function comments
+##### 設定
 
-#### Excluded Directories
+- **設定ファイル**: `phpcs.xml.dist`
+- **スタンダード**: WordPress Coding Standards
+- **除外ルール**:
+  - `WordPress.Files.FileName.NotHyphenatedLowercase` - ハイフン区切りでない小文字のファイル名を許可
+  - `WordPress.Files.FileName.InvalidClassFileName` - クラス名と一致しないクラスファイル名を許可
+  - `WordPress.WP.I18n.MissingTranslatorsComment` - 翻訳者コメントの省略を許可
+  - `WordPress.WP.I18n.NoHtmlWrappedStrings` - HTMLでラップされていない文字列を許可
+  - `Generic.CodeAnalysis.UnusedFunctionParameter.Found` - 未使用の関数パラメータを許可
+  - `Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed` - 最後に使用されたパラメータの後の未使用パラメータを許可
+  - `Generic.Commenting.DocComment.MissingShort` - docコメントでの短い説明の省略を許可
+  - `Squiz.Commenting.FunctionComment.ParamCommentFullStop` - 句点で終わらないパラメータコメントを許可
+  - `Squiz.Commenting.InlineComment.InvalidEndChar` - 無効な終了文字を持つインラインコメントを許可
+  - `Squiz.Commenting.FunctionCommentThrowTag.Missing` - 関数コメントでのthrowタグの省略を許可
+
+##### 除外ディレクトリ
 
 - `vendor/`
 - `node_modules/`
 - `tests/`
 
-#### Commands
+##### コマンド
 
-- **Lint PHP**: `npm run lint:php` - Runs PHPCS to check code against standards
-- **Format PHP**: `npm run format:php` - Runs PHPCBF to automatically fix code style issues
+- **PHPリンティング**: `npm run lint:php` - PHPCSを実行して、コードが標準に準拠しているかをチェック
+- **PHPフォーマット**: `npm run format:php` - PHPCBFを実行して、コードスタイルの問題を自動修正
 
+### テスト
 
-## Testing
+#### PHPユニットテスト
 
-### PHP Unit Testing
+このプロジェクトでは、PHPユニットテストにPHPUnitを使用しています。
 
-The project uses PHPUnit for PHP unit testing.
+##### 設定
 
-#### Configuration
+- **設定ファイル**: `phpunit.xml.dist`
+- **ブートストラップファイル**: `tests/php/bootstrap.php`
+- **テストディレクトリ**: `tests/php/`
+- **テストファイルパターン**: 接頭辞が`test-`で接尾辞が`.php`のファイル
 
-- **Configuration File**: `phpunit.xml.dist`
-- **Bootstrap File**: `tests/php/bootstrap.php`
-- **Test Directory**: `tests/php/`
-- **Test Files Pattern**: Files with prefix `test-` and suffix `.php`
+##### 依存関係
 
-#### Dependencies
+- **PHPUnit Polyfills**: 異なるPHPUnitバージョン間の互換性のためにYoast PHPUnit Polyfillsを使用
 
-- **PHPUnit Polyfills**: Uses Yoast PHPUnit Polyfills for compatibility across different PHPUnit versions
+##### テスト構造
 
-#### Test Structure
+- テストは`WP_UnitTestCase`クラスを継承する
+- テストメソッドには接頭辞`test_`を付ける
 
-- Tests extend `WP_UnitTestCase` class
-- Test methods are prefixed with `test_`
+##### コマンド
 
-#### Commands
+- **PHPテスト実行**: `npm run test:phpunit` - testdoxと詳細出力でPHPUnitテストを実行
 
-- **Run PHP Tests**: `npm run test:phpunit` - Runs PHPUnit tests with testdox and verbose output
+#### エンドツーエンド（E2E）テスト
 
-### End-to-End (E2E) Testing
+このプロジェクトでは、エンドツーエンドテストにPlaywrightを使用しています。
 
-The project uses Playwright for end-to-end testing.
+##### 設定
 
-#### Configuration
+- **設定ファイル**: `playwright.config.js`
+- **基本設定**: `@wordpress/scripts/config/playwright.config.js`を拡張
+- **テストディレクトリ**: `tests/e2e/`
 
-- **Configuration File**: `playwright.config.js`
-- **Base Configuration**: Extends `@wordpress/scripts/config/playwright.config.js`
-- **Test Directory**: `tests/e2e/`
+##### 依存関係
 
-#### Dependencies
+- **WordPress E2Eテストユーティリティ**: WordPress固有のテストユーティリティとして`@wordpress/e2e-test-utils-playwright`を使用
 
-- **WordPress E2E Test Utils**: Uses `@wordpress/e2e-test-utils-playwright` for WordPress-specific testing utilities
+##### テスト構造
 
-#### Test Structure
+- テストでは`@wordpress/e2e-test-utils-playwright`から`test`と`expect`関数を使用
+- テストには通常以下が含まれます:
+  - プラグインをアクティブ化する`beforeAll`フック
+  - プラグインを非アクティブ化する`afterAll`フック
+  - アサーションを含むテストケース
 
-- Tests use the `test` and `expect` functions from `@wordpress/e2e-test-utils-playwright`
-- Tests typically include:
-  - `beforeAll` hook to activate the plugin
-  - `afterAll` hook to deactivate the plugin
-  - Test cases with assertions
+##### コマンド
 
-#### Commands
+- **E2Eテスト実行**: `npm run test:e2e` - Playwrightテストを実行
+- **E2Eテストデバッグ**: `npm run test:e2e:debug` - デバッグモードでPlaywrightテストを実行
 
-- **Run E2E Tests**: `npm run test:e2e` - Runs Playwright tests
-- **Debug E2E Tests**: `npm run test:e2e:debug` - Runs Playwright tests in debug mode
+### 複合テスト
 
-### Combined Testing
+- **全テスト実行**: `npm run test` - PHPUnitとE2Eテストの両方を実行
 
-- **Run All Tests**: `npm run test` - Runs both PHPUnit and E2E tests
+## WordPress環境
 
-## WordPress Environment
+このプロジェクトでは、ローカルWordPress環境のセットアップに`@wordpress/env`を使用しています。
 
-The project uses `@wordpress/env` for setting up a local WordPress environment.
+##### 設定
 
-#### Configuration
+- **設定ファイル**: `.wp-env.json`
+- **WordPressコア**: デフォルトのWordPressコアを使用
+- **プラグイン**: 現在のディレクトリをプラグインとして含む
 
-- **Configuration File**: `.wp-env.json`
-- **WordPress Core**: Uses default WordPress core
-- **Plugins**: Includes the current directory as a plugin
+##### コマンド
 
-#### Commands
+- **WordPress環境でのComposer**: `npm run composer` - WordPress環境でComposerを実行
+- **テスト環境でのComposer**: `npm run composer:test` - テスト環境でComposerを実行
 
-- **Composer in WordPress Environment**: `npm run composer` - Runs Composer in the WordPress environment
-- **Composer in Test Environment**: `npm run composer:test` - Runs Composer in the test environment
+## テンプレートの使い方
+
+このリポジトリは、WordPress プラグイン開発のためのテンプレートとして設計されています。以下のステップでプラグイン開発を始めることができます。
+
+### 開始方法
+
+1. **リポジトリのクローン**:
+
+   ```bash
+   git clone https://github.com/mt8/wp-plugin-template.git [プラグインディレクトリ名]
+   cd [プラグインディレクトリ名]
+   ```
+
+2. **セットアップスクリプトを実行**:
+
+   ```bash
+   # 実行権限を付与
+   chmod +x init.sh
+   
+   # スクリプトを実行して新しいプラグインを設定
+   ./init.sh   
+   ```
+   
+   このスクリプトは以下の処理を自動的に行います：
+   - Gitリポジトリのリセット
+   - package.json内のパス更新
+   - 依存関係のインストール
+
+3. **WordPress環境の起動**:
+
+   ```bash
+   # wp-envでローカル環境を起動
+   npx wp-env start
+
+   # wp-envのコンテナ内に依存関係をインストール
+   npm run composer install
+   ```
+
+4. **初回テストの実行**
+
+   ```bash
+   npm run test
+   ```
+
+5. **セットアップスクリプトの削除**
+
+   ```bash
+   rm init.sh
+   ```
+
+### プラグイン実装のヒント
+
+1. **ディレクトリ構造**:
+   - `includes/` - 機能ごとのPHPクラスファイル
+     - 各機能は独自のクラスとして実装し、このディレクトリに配置してください
+     - 命名規則: `class-[機能名].php`（例: `class-admin.php`, `class-api.php`）
+   - `tests/` - テストコード
+
+2. **ビルドプロセス**:
+   - `npm run build` - プロジェクトをビルド
+   - `npm run start` - 開発モードで起動（ウォッチモード）
+
+3. **テスト**:
+   - PHPユニットテストを`tests/php/`に追加
+   - E2Eテストを`tests/e2e/`に追加

@@ -3,20 +3,20 @@
     "version": "1.0.0",
     "description": "A WordPress plugin template",
     "scripts": {
-      "composer":       "wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli composer",
-      "composer:test":  "wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' tests-cli composer",
-      "lint:php":       "wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli vendor/bin/phpcs",
-      "format:php":     "wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli vendor/bin/phpcbf",
-      "test:phpunit":   "wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' tests-cli vendor/bin/phpunit --testdox --verbose",
-      "test:e2e":       "wp-scripts test-playwright",
-      "test:e2e:debug": "wp-scripts test-playwright --debug",
-      "test" :          "npm run test:phpunit && npm run test:e2e"
+        "composer": "npx wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli composer",
+        "composer:test": "npx wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' tests-cli composer",
+        "lint:php": "npx wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli vendor/bin/phpcs",
+        "format:php": "npx wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' cli vendor/bin/phpcbf",
+        "test:phpunit": "npx wp-env run --env-cwd='wp-content/plugins/wp-plugin-template' tests-cli vendor/bin/phpunit --testdox --verbose",
+        "test:e2e": "npx wp-scripts test-playwright",
+        "test:e2e:debug": "npx wp-scripts test-playwright --debug",
+        "test": "npm run test:phpunit && npm run test:e2e"
     },
     "author": "mt8",
     "license": "GPL-2.0-or-later",
     "devDependencies": {
-      "@wordpress/e2e-test-utils-playwright": "^1.22.0",
-      "@wordpress/scripts": "^30.15.0"
+        "@wordpress/e2e-test-utils-playwright": "^1.22.0",
+        "@wordpress/env": "^10.22.0",
+        "@wordpress/scripts": "^30.15.0"
     }
-  }
-  
+}
