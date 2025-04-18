@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         php-version: ['8.1', '8.2', '8.3']
-        wp-version: ['latest', '6.7', '6.6']
+        wp-version: ['6.8', '6.7', '6.6']
       fail-fast: false  # 一部の組み合わせが失敗しても他の組み合わせのテストを続行
 
     name: PHP ${{ matrix.php-version }} / WP ${{ matrix.wp-version }}
